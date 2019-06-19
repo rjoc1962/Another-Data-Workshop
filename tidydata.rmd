@@ -1,0 +1,41 @@
+---
+title: "Tidy Data"
+author: "Rosemary O'Connor"
+date: "19 June 2019"
+output: html_document
+---
+
+```{r}
+library(tidyverse)     ## install.packages("tidyverse")
+```
+
+```{r}
+
+## read gapminder csv. Note the readr:: prefix identifies which package it's in
+
+gapminder <- readr::read_csv('https://raw.githubusercontent.com/OHI-Science/data-science-training/master/data/gapminder.csv')
+
+```
+```{r}
+## explore the gapminder dataset
+gapminder # this is super long! Let's inspect in different ways
+head(gapminder) # shows first 6
+tail(gapminder) # shows last 6
+
+head(gapminder, 10) # shows first X that you indicate
+tail(gapminder, 12) # guess what this does!
+
+str(gapminder) # ?str - displays the structure of an object
+names(gapminder)
+dim(gapminder)    # ?dim dimension
+ncol(gapminder)   # ?ncol number of columns
+nrow(gapminder)   # ?nrow number of rows
+
+summary(gapminder)
+
+library(skimr) # install.packages('skimr')
+skim(gapminder)
+
+```
+
+
