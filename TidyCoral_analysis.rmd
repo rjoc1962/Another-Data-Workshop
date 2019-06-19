@@ -146,6 +146,22 @@ buoy <- buoy %>%
 head(buoy)
 
 ```
+```{r}
+# Mutating and filtering data
+# Left join by date
+bb_join <- benthic %>%
+  left_join(buoy, by = "date")
+
+head(bb_join) # kind of hard to see what's going on.
+
+## let's select a few columns and inspect:
+bb_join %>%
+  select(id_name, x, y, date, hh_hr, mm_mn, WTMP_degC) %>%
+  head()
+
+
+```
+
 
 
 
