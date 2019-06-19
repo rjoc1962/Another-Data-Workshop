@@ -1,0 +1,105 @@
+---
+title: "TidyCoral"
+author: "Rosemary O'Connor"
+date: "19 June 2019"
+output: html_document
+---
+
+```{r setup, warning=FALSE, message=FALSE}
+# install libraries
+library(tidyverse) # install.packages("tidyverse")
+library(janitor)   # install.packages("janitor")
+library(skimr)     # install.packages("skimr")
+library(stringr) # added when we needed it for benthic data
+
+## data filepaths/urls ----
+
+## benthic data
+benthic_url <- 'https://www.nodc.noaa.gov/archive/arc0054/0104255/1.1/data/0-data/cd08/100308OaAla03m.CSV'
+
+## buoy data
+buoy_url <- 'http://www.ndbc.noaa.gov/view_text_file.php?filename=mokh1h2010.txt.gz&dir=data/historical/stdmet/'
+
+#load benthic data
+
+benthic_raw <- read_csv(benthic_url)
+head(benthic_raw) 
+
+# Clean up column headers using janitor
+## the `janitor` package's `clean_names` function
+## often use name of package on non-common functions/packages
+
+benthic <- benthic_raw %>%
+  janitor::clean_names()
+
+names(benthic)
+
+#look at some of the headers
+benthic <- benthic %>%
+  select(id_name, point, x, y, id_date)
+
+head(benthic)
+
+# remove leading special characters that cause problems
+benthic <- benthic %>%
+  mutate(date = stringr::str_remove_all(id_date, "#"))
+
+# summary stats
+summary(benthic)
+
+skimr::skim(benthic)
+
+# look at unique species represented
+unique(benthic$id_name)
+
+# quick ggplot
+
+ggplot(benthic, aes(date, fill = id_name)) +
+         geom_bar()
+
+```
+
+```{r}
+## Load and process Buoy Data
+
+buoy <- readr::read_csv(buoy_url)
+head(buoy) # hmm this doesn't look right! Why not? 
+#- it is a .txt file
+
+## read_table
+buoy_raw <- read_table(buoy_url)
+head(buoy) ## still not quite right -- missed some columns. 
+
+## read_table2
+buoy_raw <- read_table2(buoy_url)
+head(buoy_raw) ## this is what we need!
+
+
+## this just wasn't the right approach
+buoy_test <- read_delim(buoy_url, delim = " ", trim_ws = TRUE, skip=1)
+
+```
+```{r}
+## The better way to do this - but breaks as no local csv file
+
+#buoy_test <- read_lines(buoy_url)
+#y <- buoy_test %>%
+#  as_data_frame() %>%
+#  mutate(value = str_replace_all(value, ' +', ',')) 
+#write_delim(y, 'data/buoy_local_copy.csv')
+#
+#z <- read_csv('data/buoy_local_copy.csv', skip=1)
+#head(z) ## PRAISE BE
+
+```
+```{r}
+# Now some fun
+buoy <- buoy_raw
+names(buoy)
+head(buoy)
+
+```
+
+
+
+
