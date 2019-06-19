@@ -29,6 +29,17 @@ ohi_data <- read_csv("https://raw.githubusercontent.com/OHI-Science/data-science
 ```{r ggplot}
 ggplot(data = ohi_data, aes(x = georegion_one, y =OHI_score)) +   geom_point()
 
+
+ggplot(data = ohi_data, aes(x = OHI_score, y = HDI, size = coastal_pop)) + 
+  geom_point()
+
+ggplot(data = ohi_data, aes(x = OHI_score, y = HDI, color = coastal_pop)) + 
+  geom_point()
+
+ggplot(data = ohi_data, aes(x = OHI_score, y = HDI, shape= georegion_one, color=georegion_one)) + 
+    geom_point() + them_bw()
+
+
 ```
 Testing ggplot jitter
 
