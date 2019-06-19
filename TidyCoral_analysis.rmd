@@ -98,6 +98,53 @@ buoy <- buoy_raw
 names(buoy)
 head(buoy)
 
+# need to follow the notes in the tutorial for what this does
+
+## 1. overwrite column names
+names(buoy) <- str_c(names(buoy),                  ## current header
+                  buoy %>% filter(`#YY` == "#yr"), ## row1 -- don't say buoy[1,] 
+                  sep = "_")                       ## separate by `_`
+
+## inspect
+names(buoy) ## Looks a lot better
+
+## 2. clean up a bit more to get rid of the `#`s and the `/`s. 
+names(buoy) <- str_replace_all(names(buoy), "#", "")  # replace `#` with nothing 
+names(buoy) <- str_replace_all(names(buoy), "/", "_") # replace `/` with `_`
+
+## inspect to make sure it worked
+names(buoy)
+
+## 3. remove redundant row with units
+buoy <- buoy %>%
+  filter(YY_yr != "#yr")
+head(buoy)
+buoy <- buoy %>%
+  filter(YY_yr != "#yr")
+```
+```{r}
+# Temperature Plot
+ggplot(buoy, aes(WTMP_degC)) +
+  geom_bar()
+
+## I googled how to rotate the tick label axis so that we can read the labels:
+ggplot(buoy, aes(WTMP_degC)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90))
+
+# convert temps to numeric
+buoy <- buoy %>% mutate(WTMP_degC = as.numeric(WTMP_degC))
+
+head(benthic)
+head(buoy)
+
+# fix date format
+
+buoy <- buoy %>%
+  unite(date, c(YY_yr, MM_mo, DD_dy), sep = "-")
+
+head(buoy)
+
 ```
 
 
