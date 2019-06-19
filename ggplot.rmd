@@ -46,4 +46,48 @@ Testing ggplot jitter
 ```{r ggplotjitter}
 ggplot(data = ohi_data, aes(x = georegion_one, y =OHI_score)) +    geom_jitter(width=0.2) # the width argument describes how much scatter to add
 ```
+```{r}
+install.packages("RColorBrewer")
+library(RColorBrewer)
+
+display.brewer.all()
+
+my_palette <- brewer.pal(n=9, "YlOrRd")
+
+ggplot(data = ohi_data, aes(x = OHI_score, y = OHI_trend, color = HDI)) + 
+  geom_point(size =3) +
+  scale_colour_gradientn(colors = my_palette)
+
+my_palette <- brewer.pal(n=12, "Set3")
+
+ggplot(data = ohi_data, aes(x = OHI_score, y = HDI, color = georegion_one)) + 
+  geom_point(size = 3) +
+  scale_color_manual(values = my_palette)
+
+
+```
+
+```{r}
+
+# making a fake dataframe
+fake_data <- data.frame(animal = rep(c("cat", "dog", "hamster"), each=10),
+                        year = 2011:2020,
+                        values = c(rnorm(n=10, 5, 1) * seq(0.1, 0.5, length.out=10),
+                                   rnorm(n=10, 8, 1) * seq(0.1, 0.5, length.out=10),
+                                   rnorm(n=10, 10, 1) * seq(0.1, 0.5, length.out=10)))
+
+library(ggthemes)
+
+ggplot(data = fake_data, aes(x = as.factor(year), y = values, group=animal, color=animal)) + 
+      geom_point(size = 3) +
+      geom_line(size=2, alpha = 0.5) + 
+      labs(x = "year", color = "") +
+      theme_tufte()
+
+ggplot(data = fake_data, aes(x = as.factor(year), y = values, group=animal, color=animal)) + 
+      geom_point(size = 3) +
+      geom_line(size=2, alpha = 0.5) + 
+      labs(x = "year", color = "") +
+      theme_excel()
+```
 
