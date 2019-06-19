@@ -36,6 +36,76 @@ summary(gapminder)
 library(skimr) # install.packages('skimr')
 skim(gapminder)
 
+gapminder$lifeExp # very long! hard to make sense of...
+head(gapminder$lifeExp) # can do the same tests we tried before
+str(gapminder$lifeExp) # it is a single numeric vector
+summary(gapminder$lifeExp) # same information, formatted slightly differently
 ```
+
+Look at individual dataframe variables
+```{r}
+# show me the life exp column
+gapminder$lifeExp
+
+#using filter to get rows
+
+filter(gapminder, lifeExp < 29)
+filter(gapminder, country == "Mexico")
+x <- filter(gapminder, country == "Brazil", year > 1986)  
+mean(x$lifeExp) 
+filter(gapminder, country == "Mexico")
+filter(gapminder, country %in% c("Mexico", "Peru"))
+filter(gapminder, country == "Mexico", year == 2002)
+
+# using select for multiple columns
+select(gapminder, year, country, lifeExp) 
+
+# using select to deselect columns
+select(gapminder, -continent, -lifeExp) # you can use - to deselect columns
+
+x <- filter(gapminder, country == "Brazil", year > 1986)  
+mean(x$lifeExp) 
+
+```
+
+```{r}
+select(gapminder, year, country, lifeExp) 
+select(gapminder, -continent, -lifeExp) # you can use - to deselect columns
+
+#select and filter together
+
+gap_cambodia  <- filter(gapminder, country == "Cambodia")
+gap_cambodia2 <- select(gap_cambodia, -continent, -lifeExp) 
+
+```
+
+```{r}
+# Pipes
+gapminder %>% head()
+gapminder %>% head(3)
+## ...we can do this
+gap_cambodia  <- gapminder %>% filter(country == "Cambodia")
+gap_cambodia2 <- gap_cambodia %>% select(-continent, -lifeExp) 
+gap_cambodia  <- gapminder %>% 
+  filter(country == "Cambodia") %>%
+  select(-continent, -lifeExp) 
+```
+```{r}
+# mutate examples
+gapminder %>%
+  mutate(gdp = pop * gdpPercap)
+
+#Calculate the population in thousands for all Asian #countries in the year 2007 and add it as a new column.
+
+gapminder %>%
+  filter(continent == "Asia",
+         year == 2007) %>%
+  mutate(pop_thousands = pop/1000) %>%
+  select(country, year, pop_thousands) #this cleans up the dataframe but isn't necessary
+
+
+```
+
+
 
 
